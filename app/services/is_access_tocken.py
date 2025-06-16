@@ -1,11 +1,13 @@
 import requests
+
 from app.config import settings
+from app.config_logger import setup_logger
 
-from app.config_logger import py_logger
+logger = setup_logger(__name__)
 
 
-def check_access_token():
-    py_logger.debug("Checking access token...")
+def check_access_token() -> bool | None:
+    logger.debug("Checking access token...")
 
     url = "https://gigachat.devices.sberbank.ru/api/v1/models"
     headers = {
@@ -16,4 +18,4 @@ def check_access_token():
         response = requests.get(url, headers=headers)
         return response.status_code == 200
     except Exception as e:
-        py_logger.error(f"Checking token error: {e}")
+        logger.error(f"Checking token error: {e}")

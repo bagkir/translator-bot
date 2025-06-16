@@ -5,7 +5,9 @@ from aiogram.types import Message, TelegramObject
 from app.services.is_access_tocken import check_access_token
 from app.services.get_acces_token import get_token
 
-from app.config_logger import py_logger
+from app.config_logger import setup_logger
+
+logger = setup_logger(__name__)
 
 
 class TokenCheckMiddleware(BaseMiddleware):
@@ -15,14 +17,12 @@ class TokenCheckMiddleware(BaseMiddleware):
             event: Message,
             data: Dict[str, Any]
     ) -> Any:
-        py_logger.debug(f"Processing: {event.chat}, {event.date}")
-
-        if check_access_token() is False:
-            get_token()
-
-        py_logger.info(f"access token verified successful")
+        logger.info("Checking token...")
 
         try:
+            if check_access_token() is False:
+                get_token()
             return await handler(event, data)
         except Exception as e:
-            py_logger.error(f"Middleware error: {e}")
+            logger.error(f"Token check failed: {str(e)}", exc_info=True)
+            raise

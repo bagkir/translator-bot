@@ -2,7 +2,9 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_gigachat.chat_models import GigaChat
 
 from app.config import settings
-from app.config_logger import py_logger
+from app.config_logger import setup_logger
+
+logger = setup_logger(__name__)
 
 giga = GigaChat(
     credentials=settings.AUTH_KEY.get_secret_value(),
@@ -14,7 +16,7 @@ messages = [
 
 
 async def detect_language(text) -> str:
-    py_logger.debug("detecting language...")
+    logger.debug("detecting language...")
     ru_chars = set('абвгдеёжзийклмнопрстуфхцчшщъыьэюяАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ')
 
     count_ru = sum(1 for char in text.lower() if char in ru_chars)
@@ -25,12 +27,12 @@ async def detect_language(text) -> str:
             return "ru"
         return "en"
     except Exception as e:
-        py_logger.error(f"Detecting language error: {e}")
+        logger.error(f"Detecting language error: {e}")
         raise
 
 
-async def translate_text(text: str, dest_lang: str) -> str:
-    py_logger.debug("Translating language...")
+async def translate_text(text: str, dest_lang: str) -> str | None:
+    logger.debug("Translating language...")
     translation_prompt = f"Переведи текст '{text}' с "
 
     if dest_lang == 'ru':
@@ -46,4 +48,4 @@ async def translate_text(text: str, dest_lang: str) -> str:
         messages.append(result)
         return result.content.strip()
     except Exception as e:
-        py_logger.error(f"Translating language error: {e}")
+        logger.error(f"Translating language error: {e}")

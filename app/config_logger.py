@@ -1,12 +1,34 @@
-
 import logging
 from logging.handlers import RotatingFileHandler
+import os
 
-py_logger = logging.getLogger(__name__)
-py_logger.setLevel(logging.INFO)
+from logging import Logger
 
-py_handler = RotatingFileHandler(__name__, maxBytes=1024, mode="w", backupCount=5)
-py_formatter = logging.Formatter("%(asctime)s file - %(funcName)s, line - %(lineno)d %(levelname)s %(message)s")
 
-py_handler.setFormatter(py_formatter)
-py_logger.addHandler(py_handler)
+def setup_logger(name) -> Logger:
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.INFO)
+
+    os.makedirs('logs', exist_ok=True)
+
+    log_file = os.path.join('logs', f'{name.replace(".", "_")}.log')
+
+    handler = RotatingFileHandler(
+        log_file,
+        maxBytes=1024 * 1024,  # 1 MB
+        backupCount=5,
+        encoding='utf-8'
+    )
+
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(funcName)s, line %(lineno)d - %(message)s"
+    )
+    console_handler = logging.StreamHandler()
+    console_handler.setLevel(logging.DEBUG)
+    console_handler.setFormatter(formatter)
+    logger.addHandler(console_handler)
+
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
+    return logger

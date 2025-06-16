@@ -1,8 +1,12 @@
 import requests
 
+from requests import Response
+
 from app.config import settings
 
-from app.config_logger import py_logger
+from app.config_logger import setup_logger
+
+logger = setup_logger(__name__)
 
 url = "https://ngw.devices.sberbank.ru:9443/api/v2/oauth"
 
@@ -21,11 +25,11 @@ headers = {
 }
 
 
-def get_token():
-    py_logger.debug("Getting access token")
+def get_token() -> Response | None:
+    logger.debug("Getting access token")
 
     try:
         return requests.post(url, headers=headers, data=payload, verify=False)
     except Exception as e:
-        py_logger.error(f"Getting token error: {e}")
+        logger.error(f"Getting token error: {e}")
         raise
