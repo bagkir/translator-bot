@@ -31,7 +31,7 @@ async def detect_language(text) -> str:
         raise
 
 
-async def translate_text(text: str, dest_lang: str) -> str | None:
+async def translate_text(text: str, dest_lang: str) -> str:
     logger.debug("Translating language...")
     translation_prompt = f"Переведи текст '{text}' с "
 
@@ -49,3 +49,4 @@ async def translate_text(text: str, dest_lang: str) -> str | None:
         return result.content.strip()
     except Exception as e:
         logger.error(f"Translating language error: {e}")
+        raise

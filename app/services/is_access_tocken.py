@@ -6,7 +6,7 @@ from app.config_logger import setup_logger
 logger = setup_logger(__name__)
 
 
-def check_access_token() -> bool | None:
+def check_access_token() -> bool:
     logger.debug("Checking access token...")
 
     url = "https://gigachat.devices.sberbank.ru/api/v1/models"

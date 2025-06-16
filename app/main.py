@@ -11,7 +11,7 @@ from config_logger import setup_logger
 
 root_logger = setup_logger('app')
 
-async def main():
+async def main() -> None:
     try:
         root_logger.info("Starting bot initialization...")
 

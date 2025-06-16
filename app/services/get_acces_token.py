@@ -25,7 +25,7 @@ headers = {
 }
 
 
-def get_token() -> Response | None:
+def get_token() -> Response:
     logger.debug("Getting access token")
 
     try:
