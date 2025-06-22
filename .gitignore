@@ -9,9 +9,12 @@ __pycache__/
 
 # Environment
 .env
+.venv
 
 # Logs
 *.log
 
 # Local files
 .txt
+
+.postgresql/

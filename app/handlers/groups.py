@@ -18,7 +18,7 @@ async def handle_group_message(message: Message) -> None:
         sender_lang: str = await detect_language(message.text)
         all_users = await UserDAO.find_all()
         for user in all_users:
-            if user.language != sender_lang and user.tg_id != message.from_user.id:
+            if user.language == sender_lang and user.tg_id != message.from_user.id:
                 translated = await translate_text(
                     text=message.text,
                     dest_lang=sender_lang,
